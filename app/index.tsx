@@ -4,10 +4,13 @@ import PillsGroup from "@/components/PillsGroup";
 import Spacer from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { fakeTasks } from "@/data";
+import { determineCardsGroup } from "@/utils/determineCardsGroup";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function index() {
+  const { left, right } = determineCardsGroup(fakeTasks);
   return (
     <View style={styles.container}>
       <ThemedText
@@ -28,27 +31,14 @@ export default function index() {
       <ScrollView>
         <View style={styles.cardsSectionsContainer}>
           <View style={[styles.card, styles.cardsLeft]}>
-            <Card  isPrimary/>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {left.map((card) => (
+              <Card key={card.id} {...card} />
+            ))}
           </View>
           <View style={[styles.card, styles.cardsRight]}>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {right.map((card) => (
+              <Card key={card.id} {...card} />
+            ))}
           </View>
         </View>
       </ScrollView>
