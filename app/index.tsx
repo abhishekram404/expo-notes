@@ -18,7 +18,7 @@ export default function index() {
       </ThemedText>
       <Spacer size={6} />
       <PillsGroup>
-        <Pill label="All" />
+        <Pill label="All" isActive />
         <Pill label="To-Do list" />
         <Pill label="Work" />
         <Pill label="Journal" />
