@@ -1,15 +1,26 @@
 import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import React from "react";
+import React, { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 
-export default function Card({ isPrimary }: { isPrimary?: boolean }) {
+export type CardBodyType = "text" | "custom";
+export type CardProps = {
+  isPrimary?: boolean;
+  title: string;
+  bodyType?: CardBodyType;
+  body?: ReactNode;
+  bodyText?: string;
+  date: string;
+  isPinned?: boolean;
+};
+export default function Card(props: CardProps) {
+  const { isPrimary, title, body, bodyText, bodyType, date, isPinned } = props;
   return (
     <View style={[styles.container, isPrimary && styles.primary]}>
       <View style={styles.header}>
-        <ThemedText darkColor={Colors.dark.heading} style={styles.title}>
-          Today Work
+        <ThemedText darkColor={Colors.dark.heading} style={styles.title} numberOfLines={1}>
+          {title}
         </ThemedText>
         <MaterialIcons
           name="more-horiz"
@@ -18,18 +29,22 @@ export default function Card({ isPrimary }: { isPrimary?: boolean }) {
         />
       </View>
       <View style={styles.body}>
-        <Text style={[styles.bodyText, isPrimary && styles.bodyTextPrimary]}>
-          UI/UX Design involves effective design principles.
-        </Text>
+        {bodyType === "text" && (
+          <Text style={[styles.bodyText, isPrimary && styles.bodyTextPrimary]}>
+            {bodyText}{" "}
+          </Text>
+        )}
+        {bodyType === "custom" && body}
+        {body}
       </View>
       <View style={styles.footer}>
         <Text style={[styles.date, isPrimary && styles.primaryFooter]}>
-          Tue, 27 June 2023
+          {date}
         </Text>
         <MaterialCommunityIcons
-          name="pin-outline"
+          name={isPinned ? "pin" : "pin-outline"}
           size={16}
-          color={Colors.dark.secondaryText}
+          color={isPinned ? Colors.dark.heading : Colors.dark.secondaryText}
         />
       </View>
     </View>
@@ -45,12 +60,15 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
+    gap: 10,
   },
   title: {
-    fontSize: 18,
+    flex: 0.95,
+    fontSize: 16,
     fontWeight: 500,
   },
 
