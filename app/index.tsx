@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import CheckList from "@/components/CheckList";
 import Fab from "@/components/Fab";
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
@@ -35,6 +36,13 @@ export default function index() {
       <ScrollView>
         <View style={styles.cardsSectionsContainer}>
           <View style={[styles.card, styles.cardsLeft]}>
+            <Card
+              title="Today work"
+              date="22 Mar, 01:12 PM"
+              bodyType="custom"
+              body={<CheckList />}
+            />
+
             {left.map((card) => (
               <Card key={card.id} {...card} />
             ))}

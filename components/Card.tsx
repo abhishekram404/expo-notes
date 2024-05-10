@@ -19,7 +19,11 @@ export default function Card(props: CardProps) {
   return (
     <View style={[styles.container, isPrimary && styles.primary]}>
       <View style={styles.header}>
-        <ThemedText darkColor={Colors.dark.heading} style={styles.title} numberOfLines={1}>
+        <ThemedText
+          darkColor={Colors.dark.heading}
+          style={styles.title}
+          numberOfLines={1}
+        >
           {title}
         </ThemedText>
         <MaterialIcons
@@ -35,7 +39,6 @@ export default function Card(props: CardProps) {
           </Text>
         )}
         {bodyType === "custom" && body}
-        {body}
       </View>
       <View style={styles.footer}>
         <Text style={[styles.date, isPrimary && styles.primaryFooter]}>
