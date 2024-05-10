@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { Component } from "react";
 import { Colors } from "@/constants/Colors";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import { ThemedText } from "./ThemedText";
 
-export default function Pill({ label }: { label: string }) {
+export default function Pill({ label }: { label: string, isActive?: boolean }) {
   return (
     <View style={styles.container}>
       <ThemedText>{label}</ThemedText>
