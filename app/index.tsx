@@ -27,7 +27,7 @@ export default function index() {
         <Pill label="Work" />
         <Pill label="Journal" />
       </PillsGroup>
-      <Spacer size={6} />
+      <Spacer size={10} />
       <ScrollView>
         <View style={styles.cardsSectionsContainer}>
           <View style={[styles.card, styles.cardsLeft]}>
