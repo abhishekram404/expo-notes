@@ -23,5 +23,6 @@ export const Colors = {
     secondary: "#2C2C2E",
     icon: "#9BA1A6",
     secondaryText: "#9F9FA0",
+    ripple: "#2C2C2E40",
   },
 };

@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import Fab from "@/components/Fab";
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import Spacer from "@/components/Spacer";
@@ -6,11 +7,14 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { fakeTasks } from "@/data";
 import { determineCardsGroup } from "@/utils/determineCardsGroup";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function index() {
   const { left, right } = determineCardsGroup(fakeTasks);
+
   return (
     <View style={styles.container}>
       <ThemedText
@@ -42,6 +46,13 @@ export default function index() {
           </View>
         </View>
       </ScrollView>
+      <Fab onPress={() => router.push("/create")}>
+        <MaterialCommunityIcons
+          name="plus"
+          size={28}
+          color={Colors.dark.heading}
+        />
+      </Fab>
     </View>
   );
 }
