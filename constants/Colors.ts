@@ -22,5 +22,6 @@ export const Colors = {
     primary: "#3269FF",
     secondary: "#2C2C2E",
     icon: "#9BA1A6",
+    secondaryText: "#9F9FA0",
   },
 };

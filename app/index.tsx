@@ -1,10 +1,11 @@
+import Card from "@/components/Card";
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import Spacer from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function index() {
   return (
@@ -24,6 +25,33 @@ export default function index() {
         <Pill label="Journal" />
       </PillsGroup>
       <Spacer size={6} />
+      <ScrollView>
+        <View style={styles.cardsSectionsContainer}>
+          <View style={[styles.card, styles.cardsLeft]}>
+            <Card  isPrimary/>
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+          </View>
+          <View style={[styles.card, styles.cardsRight]}>
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -42,4 +70,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     gap: 15,
   },
+  cardsSectionsContainer: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  card: {
+    flexDirection: "column",
+    gap: 10,
+    flex: 1,
+  },
+  cardsLeft: {},
+  cardsRight: {},
 });
