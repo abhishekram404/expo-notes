@@ -1,8 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import dayjs from "dayjs";
+import RelativeTime from "dayjs/plugin/relativeTime";
 import React, { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ThemedText } from "./ThemedText";
+
+dayjs.extend(RelativeTime);
 
 export type CardBodyType = "text" | "custom";
 export type CardProps = {
@@ -42,7 +46,7 @@ export default function Card(props: CardProps) {
       </View>
       <View style={styles.footer}>
         <Text style={[styles.date, isPrimary && styles.primaryFooter]}>
-          {date}
+          {dayjs(date).fromNow()}
         </Text>
         <MaterialCommunityIcons
           name={isPinned ? "pin" : "pin-outline"}

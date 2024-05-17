@@ -1,20 +1,35 @@
 import Card from "@/components/Card";
-import CheckList from "@/components/CheckList";
 import Fab from "@/components/Fab";
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import Spacer from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { fakeTasks } from "@/data";
+import { supabase } from "@/lib/supabase";
 import { determineCardsGroup } from "@/utils/determineCardsGroup";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function index() {
-  const { left, right } = determineCardsGroup(fakeTasks);
+  const [notes, setNotes] = useState<any[]>([]);
+  const { left, right } = determineCardsGroup(notes);
+
+  useEffect(() => {
+    const getNotes = async () => {
+      try {
+        const { data } = await supabase.from("notes").select();
+        if (data && Array.isArray(data)) {
+          setNotes(data);
+        }
+      } catch (error) {
+        console.error("Error fetching notes", error);
+      }
+    };
+
+    getNotes();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -36,20 +51,13 @@ export default function index() {
       <ScrollView>
         <View style={styles.cardsSectionsContainer}>
           <View style={[styles.card, styles.cardsLeft]}>
-            <Card
-              title="Today work"
-              date="22 Mar, 01:12 PM"
-              bodyType="custom"
-              body={<CheckList />}
-            />
-
             {left.map((card) => (
-              <Card key={card.id} {...card} />
+              <Card key={card.id} {...card} date={card.updated_at} />
             ))}
           </View>
           <View style={[styles.card, styles.cardsRight]}>
             {right.map((card) => (
-              <Card key={card.id} {...card} />
+              <Card key={card.id} {...card} date={card.updated_at} />
             ))}
           </View>
         </View>
