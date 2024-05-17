@@ -10,13 +10,17 @@ dayjs.extend(RelativeTime);
 
 export type CardBodyType = "text" | "custom";
 export type CardProps = {
+  id?: number;
   isPrimary?: boolean;
-  title: string;
+  title?: string;
   bodyType?: CardBodyType;
   body?: ReactNode;
   bodyText?: string;
   date: string;
   isPinned?: boolean;
+
+  updated_at: string;
+  created_at: string;
 };
 export default function Card(props: CardProps) {
   const { isPrimary, title, body, bodyText, bodyType, date, isPinned } = props;
@@ -36,14 +40,18 @@ export default function Card(props: CardProps) {
           color={Colors.dark.secondaryText}
         />
       </View>
-      <View style={styles.body}>
-        {bodyType === "text" && (
-          <Text style={[styles.bodyText, isPrimary && styles.bodyTextPrimary]}>
-            {bodyText}{" "}
-          </Text>
-        )}
-        {bodyType === "custom" && body}
-      </View>
+      {(bodyText || body) && (
+        <View style={styles.body}>
+          {bodyType === "text" && (
+            <Text
+              style={[styles.bodyText, isPrimary && styles.bodyTextPrimary]}
+            >
+              {bodyText}{" "}
+            </Text>
+          )}
+          {bodyType === "custom" && body}
+        </View>
+      )}
       <View style={styles.footer}>
         <Text style={[styles.date, isPrimary && styles.primaryFooter]}>
           {dayjs(date).fromNow()}

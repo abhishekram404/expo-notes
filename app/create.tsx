@@ -1,6 +1,7 @@
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import { Colors } from "@/constants/Colors";
+import { supabase } from "@/lib/supabase";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
@@ -29,14 +30,29 @@ const create = () => {
     bodyText: "",
   });
 
-  const goBack = () => router.back();
-  const saveNote = () => {
-    ToastAndroid.show("Note saved", ToastAndroid.SHORT);
-    router.push("/");
-  };
-
   const handleChange = (name: "title" | "bodyText") => (text: string) => {
     setNewPost((prev) => ({ ...prev, [name]: text }));
+  };
+
+  const goBack = () => router.back();
+
+  const saveNote = async () => {
+    if (!newPost.title.trim() && !newPost.bodyText.trim()) {
+      ToastAndroid.show("Note is empty", ToastAndroid.SHORT);
+      return;
+    }
+    try {
+      const res = await supabase.from("notes").insert({
+        title: newPost.title,
+        bodyText: newPost.bodyText,
+      });
+      console.log(res);
+
+      ToastAndroid.show("Note saved", ToastAndroid.SHORT);
+      router.push("/");
+    } catch (error) {
+      ToastAndroid.show("Couldn't save note", ToastAndroid.SHORT);
+    }
   };
 
   const today = dayjs().format("ddd, DD MMM YYYY");

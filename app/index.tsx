@@ -1,4 +1,3 @@
-import Card from "@/components/Card";
 import Fab from "@/components/Fab";
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
@@ -7,6 +6,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { determineCardsGroup } from "@/utils/determineCardsGroup";
+import { renderCard } from "@/utils/renderCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -51,14 +51,10 @@ export default function index() {
       <ScrollView>
         <View style={styles.cardsSectionsContainer}>
           <View style={[styles.card, styles.cardsLeft]}>
-            {left.map((card) => (
-              <Card key={card.id} {...card} date={card.updated_at} />
-            ))}
+            {left.map(renderCard)}
           </View>
           <View style={[styles.card, styles.cardsRight]}>
-            {right.map((card) => (
-              <Card key={card.id} {...card} date={card.updated_at} />
-            ))}
+            {right.map(renderCard)}
           </View>
         </View>
       </ScrollView>
