@@ -2,13 +2,16 @@ import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import { Colors } from "@/constants/Colors";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TextInputProps,
+  ToastAndroid,
   View,
 } from "react-native";
 
@@ -19,27 +22,38 @@ const inputConfigs: TextInputProps = {
   cursorColor: Colors.dark.primary,
 };
 const create = () => {
+  const router = useRouter();
+
+  const goBack = () => router.back();
+  const saveNote = () => {
+    ToastAndroid.show("Note saved", ToastAndroid.SHORT);
+    router.push("/");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={[styles.headerButton]}>
-          <Ionicons
-            style={styles.headerButtonIcon}
-            name="chevron-back"
-            size={20}
-            color={Colors.dark.icon}
-          />
-        </View>
+        <Pressable onPress={goBack}>
+          <View style={[styles.headerButton]}>
+            <Ionicons
+              style={styles.headerButtonIcon}
+              name="chevron-back"
+              size={20}
+              color={Colors.dark.icon}
+            />
+          </View>
+        </Pressable>
         <Text style={styles.headerTitle}>Create Note</Text>
 
-        <View style={[styles.headerButton]}>
-          <MaterialCommunityIcons
-            style={styles.headerButtonIcon}
-            name="check"
-            size={20}
-            color={Colors.dark.primary}
-          />
-        </View>
+        <Pressable onPress={saveNote}>
+          <View style={[styles.headerButton]}>
+            <MaterialCommunityIcons
+              style={styles.headerButtonIcon}
+              name="check"
+              size={20}
+              color={Colors.dark.primary}
+            />
+          </View>
+        </Pressable>
       </View>
       <TextInput
         placeholder="Title"
@@ -81,7 +95,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Colors.dark.text,
   },
   headerButton: {

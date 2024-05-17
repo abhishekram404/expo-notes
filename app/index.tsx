@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingHorizontal: 10,
+    color: Colors.dark.heading,
   },
   pillsBar: {
     flexDirection: "row",

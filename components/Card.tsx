@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     flex: 0.95,
     fontSize: 16,
     fontWeight: 500,
+    color: Colors.dark.heading,
   },
 
   body: {},
