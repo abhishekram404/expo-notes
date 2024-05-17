@@ -2,8 +2,9 @@ import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import { Colors } from "@/constants/Colors";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -23,12 +24,23 @@ const inputConfigs: TextInputProps = {
 };
 const create = () => {
   const router = useRouter();
+  const [newPost, setNewPost] = useState({
+    title: "",
+    bodyText: "",
+  });
 
   const goBack = () => router.back();
   const saveNote = () => {
     ToastAndroid.show("Note saved", ToastAndroid.SHORT);
     router.push("/");
   };
+
+  const handleChange = (name: "title" | "bodyText") => (text: string) => {
+    setNewPost((prev) => ({ ...prev, [name]: text }));
+  };
+
+  const today = dayjs().format("ddd, DD MMM YYYY");
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -59,9 +71,14 @@ const create = () => {
         placeholder="Title"
         style={styles.titleInput}
         maxLength={100}
+        value={newPost.title}
+        onChangeText={handleChange("title")}
         {...inputConfigs}
       />
-      <Text style={styles.infoText}>Tue, 27 June 2023 . 120 Characters</Text>
+      <Text style={styles.infoText}>
+        {today}
+        {newPost.bodyText && <>. {newPost.bodyText.length} characters</>}
+      </Text>
       <PillsGroup>
         <Pill label="To-Do list" mini />
         <Pill label="Personal" mini />
@@ -73,6 +90,8 @@ const create = () => {
           placeholder="Write your note here..."
           style={styles.contentInput}
           textAlignVertical="top"
+          value={newPost.bodyText}
+          onChangeText={handleChange("bodyText")}
           {...inputConfigs}
         />
       </ScrollView>
