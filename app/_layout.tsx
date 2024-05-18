@@ -14,6 +14,10 @@ import "react-native-reanimated";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+export const unstable_settings = {
+  initialRouteName: "index",
+};
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -46,7 +50,7 @@ export default function RootLayout() {
       <View style={styles.container}>
         {session ? (
           <Stack
-            initialRouteName="/index"
+            initialRouteName="index"
             screenOptions={{
               title: "Expo Notes",
               statusBarStyle: "auto",

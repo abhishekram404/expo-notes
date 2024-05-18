@@ -4,8 +4,8 @@ import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { Stack, useNavigation, useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -56,25 +56,24 @@ const create = () => {
 
   const today = dayjs().format("ddd, DD MMM YYYY");
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Pressable onPress={saveNote}>
-          <View style={[styles.headerButton]}>
-            <MaterialCommunityIcons
-              style={styles.headerButtonIcon}
-              name="check"
-              size={20}
-              color={Colors.dark.primary}
-            />
-          </View>
-        </Pressable>
-      ),
-    });
-  }, [navigation]);
-
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <Pressable onPress={saveNote}>
+              <View style={[styles.headerButton]}>
+                <MaterialCommunityIcons
+                  style={styles.headerButtonIcon}
+                  name="check"
+                  size={20}
+                  color={Colors.dark.primary}
+                />
+              </View>
+            </Pressable>
+          ),
+        }}
+      />
       <TextInput
         placeholder="Title"
         style={styles.titleInput}
