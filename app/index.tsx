@@ -2,7 +2,6 @@ import Fab from "@/components/Fab";
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import Spacer from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { determineCardsGroup } from "@/utils/determineCardsGroup";
@@ -33,14 +32,6 @@ export default function index() {
 
   return (
     <View style={styles.container}>
-      <ThemedText
-        type="title"
-        darkColor={Colors.dark.heading}
-        style={styles.title}
-      >
-        My Notes
-      </ThemedText>
-      <Spacer size={6} />
       <PillsGroup>
         <Pill label="All" isActive />
         <Pill label="To-Do list" />
@@ -72,6 +63,7 @@ export default function index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 10,
   },
   title: {
     paddingHorizontal: 10,

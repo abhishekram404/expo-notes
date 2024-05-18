@@ -5,12 +5,11 @@ import { supabase } from "@/lib/supabase";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Session } from "@supabase/supabase-js";
 import { useFonts } from "expo-font";
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -44,11 +43,32 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={DarkTheme}>
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: Colors.dark.background }}
-      >
-        <View style={styles.container}>{session ? <Slot /> : <Auth />}</View>
-      </SafeAreaView>
+      <View style={styles.container}>
+        {session ? (
+          <Stack
+            initialRouteName="/index"
+            screenOptions={{
+              title: "Expo Notes",
+              statusBarStyle: "auto",
+              statusBarTranslucent: true,
+              headerTintColor: Colors.dark.heading,
+              headerStyle: {
+                backgroundColor: Colors.dark.background,
+              },
+            }}
+          >
+            <Stack.Screen
+              name="create"
+              options={{
+                title: "Create Note ",
+                headerBackButtonMenuEnabled: true,
+              }}
+            />
+          </Stack>
+        ) : (
+          <Auth />
+        )}
+      </View>
     </ThemeProvider>
   );
 }
@@ -57,6 +77,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.dark.background,
-    padding: 10,
   },
 });

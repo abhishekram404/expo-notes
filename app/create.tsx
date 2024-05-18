@@ -2,10 +2,10 @@ import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -25,6 +25,7 @@ const inputConfigs: TextInputProps = {
 };
 const create = () => {
   const router = useRouter();
+  const navigation = useNavigation();
   const [newPost, setNewPost] = useState({
     title: "",
     bodyText: "",
@@ -33,8 +34,6 @@ const create = () => {
   const handleChange = (name: "title" | "bodyText") => (text: string) => {
     setNewPost((prev) => ({ ...prev, [name]: text }));
   };
-
-  const goBack = () => router.back();
 
   const saveNote = async () => {
     if (!newPost.title.trim() && !newPost.bodyText.trim()) {
@@ -49,7 +48,7 @@ const create = () => {
       console.log(res);
 
       ToastAndroid.show("Note saved", ToastAndroid.SHORT);
-      router.push("/");
+      router.dismiss();
     } catch (error) {
       ToastAndroid.show("Couldn't save note", ToastAndroid.SHORT);
     }
@@ -57,21 +56,9 @@ const create = () => {
 
   const today = dayjs().format("ddd, DD MMM YYYY");
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Pressable onPress={goBack}>
-          <View style={[styles.headerButton]}>
-            <Ionicons
-              style={styles.headerButtonIcon}
-              name="chevron-back"
-              size={20}
-              color={Colors.dark.icon}
-            />
-          </View>
-        </Pressable>
-        <Text style={styles.headerTitle}>Create Note</Text>
-
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
         <Pressable onPress={saveNote}>
           <View style={[styles.headerButton]}>
             <MaterialCommunityIcons
@@ -82,7 +69,12 @@ const create = () => {
             />
           </View>
         </Pressable>
-      </View>
+      ),
+    });
+  }, [navigation]);
+
+  return (
+    <View style={styles.container}>
       <TextInput
         placeholder="Title"
         style={styles.titleInput}
@@ -136,7 +128,6 @@ const styles = StyleSheet.create({
   headerButton: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: Colors.dark.secondary,
     justifyContent: "center",
     alignItems: "center",
   },
