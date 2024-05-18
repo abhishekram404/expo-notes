@@ -1,7 +1,9 @@
 {
   "expo": {
-    "name": "expo-notes",
+    "name": "Expo Notes",
+    "description": "A simple notes app built by Keshav Kishor Ram using Expo (React Native) for learning purpose.",
     "slug": "expo-notes",
+    "owner": "Keshav Kishor Ram",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
