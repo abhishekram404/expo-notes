@@ -1,13 +1,15 @@
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
-import React from "react";
+import React, { useState } from "react";
 import {
-    AppState,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Alert,
+  AppState,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  ToastAndroid,
+  View,
 } from "react-native";
 import Spacer from "./Spacer";
 
@@ -19,7 +21,77 @@ AppState.addEventListener("change", (state) => {
   }
 });
 
+const validateCreds = (creds: Credentials) => {
+  if (!creds?.email?.trim()) {
+    Alert.alert("Invalid credentials", "An email is required.");
+    return false;
+  }
+
+  if (!creds?.password?.trim()) {
+    Alert.alert("Invalid credentials", "A password is required.");
+    return false;
+  }
+
+  return true;
+};
+
+export type Credentials = {
+  email: string;
+  password: string;
+};
+
 export default function Auth() {
+  const [isLoading, setLoading] = useState(false);
+  const [creds, setCreds] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (name: "email" | "password") => (text: string) => {
+    setCreds((prev) => ({ ...prev, [name]: text }));
+  };
+
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      const isCredentialsValid = validateCreds(creds);
+      if (!isCredentialsValid) return;
+
+      const { error } = await supabase.auth.signInWithPassword(creds);
+      if (error) return Alert.alert("Login failed", error.message);
+
+      ToastAndroid.show("Login successful", ToastAndroid.SHORT);
+    } catch (error) {
+      Alert.alert("Login failed", "Something went wrong while logging you in.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      const isCredentialsValid = validateCreds(creds);
+      if (!isCredentialsValid) return;
+
+      const { data, error } = await supabase.auth.signUp(creds);
+      if (error) return Alert.alert("Registration failed", error.message);
+
+      if (!data.session)
+        Alert.alert(
+          "Registration successful",
+          "Please check your inbox for email verification!"
+        );
+    } catch (error) {
+      Alert.alert(
+        "Registration failed",
+        "Something went wrong while signing you up."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.form}>
@@ -27,15 +99,32 @@ export default function Auth() {
         <Spacer size={6} />
         <View style={styles.inputLabelGroup}>
           <Text style={styles.label}>Email</Text>
-          <TextInput style={styles.input} />
+          <TextInput
+            style={styles.input}
+            placeholder="e.g. abc@xyz.com"
+            placeholderTextColor={Colors.dark.secondaryText}
+            cursorColor={Colors.dark.primary}
+            selectionColor={Colors.dark.primary}
+            value={creds.email}
+            onChangeText={handleChange("email")}
+          />
         </View>
         <Spacer size={4} />
         <View style={styles.inputLabelGroup}>
           <Text style={styles.label}>Password</Text>
-          <TextInput style={styles.input} />
+          <TextInput
+            style={styles.input}
+            value={creds.password}
+            placeholder="e.g. NF*4WXf9RU"
+            placeholderTextColor={Colors.dark.secondaryText}
+            cursorColor={Colors.dark.primary}
+            selectionColor={Colors.dark.primary}
+            secureTextEntry
+            onChangeText={handleChange("password")}
+          />
         </View>
         <Spacer size={10} />
-        <Pressable>
+        <Pressable onPress={handleLogin} disabled={isLoading}>
           <View style={[styles.button, styles.buttonPrimary]}>
             <Text style={[styles.buttonText, styles.buttonPrimaryText]}>
               Login
@@ -43,7 +132,7 @@ export default function Auth() {
           </View>
         </Pressable>
         <Spacer size={4} />
-        <Pressable>
+        <Pressable onPress={handleRegister} disabled={isLoading}>
           <View style={[styles.button, styles.buttonSecondary]}>
             <Text style={[styles.buttonText, styles.buttonSecondatyText]}>
               Register
