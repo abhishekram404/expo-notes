@@ -5,7 +5,6 @@ import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Stack } from "expo-router";
-import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
@@ -51,15 +50,6 @@ export default function StackLayout() {
                 headerBackButtonMenuEnabled: true,
               }}
             />
-            <Drawer>
-              <Drawer.Screen
-                name="create"
-                options={{
-                  drawerLabel: "Create",
-                  title: "Create",
-                }}
-              />
-            </Drawer>
           </Stack>
         </>
       ) : (
