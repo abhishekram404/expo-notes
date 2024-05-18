@@ -1,7 +1,10 @@
 import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import { Colors } from "@/constants/Colors";
+import { state$ } from "@/lib/state";
 import { supabase } from "@/lib/supabase";
+import { Note } from "@/lib/types/Note.type";
+import { generateRandomString } from "@/utils/generateRandomString";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -46,7 +49,7 @@ const Create = () => {
     mutationFn: postNote,
     onSuccess: ({ error }) => {
       if (error) return Alert.alert("Unable to save note", error.message);
-      
+
       queryClient.invalidateQueries({ queryKey: ["all-notes"] });
       ToastAndroid.show("Note saved", ToastAndroid.SHORT);
       router.dismiss();
@@ -63,12 +66,27 @@ const Create = () => {
     setNewPost((prev) => ({ ...prev, [name]: text }));
   };
 
+  const addNote = (data: Pick<Note, "title" | "bodyText">) => {
+    const note: Note = {
+      title: data.title,
+      bodyText: data.bodyText,
+      isPrimary: false,
+      isPinned: false,
+      local_inserted_at: new Date(),
+      local_updated_at: new Date(),
+      local_id: generateRandomString(),
+    };
+    state$.notes.set((prev) => [...prev, note]);
+    ToastAndroid.show("Note saved", ToastAndroid.SHORT);
+    router.dismiss();
+  };
+
   const saveNote = async () => {
     if (!newPost.title.trim() && !newPost.bodyText.trim()) {
       ToastAndroid.show("Note is empty", ToastAndroid.SHORT);
       return;
     }
-    mutation.mutate(newPost);
+    addNote(newPost);
   };
 
   const today = dayjs().format("ddd, DD MMM YYYY");

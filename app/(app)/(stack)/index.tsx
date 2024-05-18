@@ -3,12 +3,13 @@ import Pill from "@/components/Pill";
 import PillsGroup from "@/components/PillsGroup";
 import Spacer from "@/components/Spacer";
 import { Colors } from "@/constants/Colors";
+import { state$ } from "@/lib/state";
 import { supabase } from "@/lib/supabase";
 import { determineCardsGroup } from "@/utils/determineCardsGroup";
 import { renderCard } from "@/utils/renderCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { observer } from "@legendapp/state/react";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { useQuery } from "@tanstack/react-query";
 import { router, Stack, useNavigation } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
@@ -22,16 +23,17 @@ const fetchNotes = async () =>
     ascending: false,
   });
 
-export default function index() {
+export default observer(function index() {
   const navigation = useNavigation<DrawerNavigationProp<{}>>();
-  const { data: notes = [] } = useQuery({
-    queryKey: ["all-notes"],
-    queryFn: fetchNotes,
-    select(data: any) {
-      return data?.data;
-    },
-  });
+  // const { data: notes = [] } = useQuery({
+  //   queryKey: ["all-notes"],
+  //   queryFn: fetchNotes,
+  //   select(data: any) {
+  //     return data?.data;
+  //   },
+  // });
 
+  const notes = state$.notes.get();
   const { left, right } = determineCardsGroup(notes);
 
   return (
@@ -82,7 +84,7 @@ export default function index() {
       </View>
     </>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

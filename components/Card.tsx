@@ -16,11 +16,8 @@ export type CardProps = {
   bodyType?: CardBodyType;
   body?: ReactNode;
   bodyText?: string;
-  date: string;
+  date: string | Date;
   isPinned?: boolean;
-
-  updated_at: string;
-  created_at: string;
 };
 export default function Card(props: CardProps) {
   const { isPrimary, title, body, bodyText, bodyType, date, isPinned } = props;
