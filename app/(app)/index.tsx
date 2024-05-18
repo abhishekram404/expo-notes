@@ -7,28 +7,23 @@ import { supabase } from "@/lib/supabase";
 import { determineCardsGroup } from "@/utils/determineCardsGroup";
 import { renderCard } from "@/utils/renderCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
+const fetchNotes = async () => supabase.from("notes").select();
+
 export default function index() {
-  const [notes, setNotes] = useState<any[]>([]);
+  const { data: notes = [] } = useQuery({
+    queryKey: ["all-notes"],
+    queryFn: fetchNotes,
+    select(data: any) {
+      return data?.data;
+    },
+  });
+
   const { left, right } = determineCardsGroup(notes);
-
-  useEffect(() => {
-    const getNotes = async () => {
-      try {
-        const { data } = await supabase.from("notes").select();
-        if (data && Array.isArray(data)) {
-          setNotes(data);
-        }
-      } catch (error) {
-        console.error("Error fetching notes", error);
-      }
-    };
-
-    getNotes();
-  }, []);
 
   return (
     <View style={styles.container}>

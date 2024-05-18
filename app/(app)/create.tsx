@@ -3,10 +3,12 @@ import PillsGroup from "@/components/PillsGroup";
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { Stack, useNavigation, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -23,12 +25,38 @@ const inputConfigs: TextInputProps = {
   multiline: true,
   cursorColor: Colors.dark.primary,
 };
-const create = () => {
+
+type PostNotePayload = {
+  title: string;
+  bodyText: string;
+};
+
+const postNote = async (note: PostNotePayload) =>
+  supabase.from("notes").insert(note);
+
+const Create = () => {
   const router = useRouter();
-  const navigation = useNavigation();
-  const [newPost, setNewPost] = useState({
+  const queryClient = useQueryClient();
+  const [newPost, setNewPost] = useState<PostNotePayload>({
     title: "",
     bodyText: "",
+  });
+
+  const mutation = useMutation({
+    mutationFn: postNote,
+    onSuccess: ({ error }) => {
+      if (error) return Alert.alert("Unable to save note", error.message);
+      
+      queryClient.invalidateQueries({ queryKey: ["all-notes"] });
+      ToastAndroid.show("Note saved", ToastAndroid.SHORT);
+      router.dismiss();
+    },
+    onError: () => {
+      Alert.alert(
+        "Unable to save note",
+        "Something went wrong while saving the note!"
+      );
+    },
   });
 
   const handleChange = (name: "title" | "bodyText") => (text: string) => {
@@ -40,18 +68,7 @@ const create = () => {
       ToastAndroid.show("Note is empty", ToastAndroid.SHORT);
       return;
     }
-    try {
-      const res = await supabase.from("notes").insert({
-        title: newPost.title,
-        bodyText: newPost.bodyText,
-      });
-      console.log(res);
-
-      ToastAndroid.show("Note saved", ToastAndroid.SHORT);
-      router.dismiss();
-    } catch (error) {
-      ToastAndroid.show("Couldn't save note", ToastAndroid.SHORT);
-    }
+    mutation.mutate(newPost);
   };
 
   const today = dayjs().format("ddd, DD MMM YYYY");
@@ -106,7 +123,7 @@ const create = () => {
   );
 };
 
-export default create;
+export default Create;
 
 const styles = StyleSheet.create({
   container: {
