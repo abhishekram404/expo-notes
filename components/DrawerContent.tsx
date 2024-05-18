@@ -1,21 +1,34 @@
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { DrawerActions } from "@react-navigation/native";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Image } from "expo-image";
+import { useNavigation } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, ToastAndroid, View } from "react-native";
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 const getUser = async () => supabase.auth.getUser();
+const logout = async () => supabase.auth.signOut();
 
 export function DrawerContent() {
+  const navigation = useNavigation<DrawerNavigationProp<{}>>();
   const { data } = useQuery({
     queryKey: ["auth-user"],
     queryFn: getUser,
   });
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess() {
+      navigation.dispatch(DrawerActions.closeDrawer());
+      ToastAndroid.show("Logged out", ToastAndroid.SHORT);
+    },
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -29,10 +42,16 @@ export function DrawerContent() {
         <Text style={styles.userName}>{data?.data?.user?.email}</Text>
       </View>
       <View style={styles.footer}>
-        <View style={styles.logoutButton}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
-          <MaterialIcons name="logout" size={24} color={Colors.dark.heading} />
-        </View>
+        <Pressable onPress={() => logoutMutation.mutate()}>
+          <View style={styles.logoutButton}>
+            <Text style={styles.logoutButtonText}>Logout</Text>
+            <MaterialIcons
+              name="logout"
+              size={24}
+              color={Colors.dark.heading}
+            />
+          </View>
+        </Pressable>
       </View>
     </View>
   );

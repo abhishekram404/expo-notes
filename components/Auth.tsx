@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import {
   Alert,
@@ -41,6 +42,7 @@ export type Credentials = {
 };
 
 export default function Auth() {
+  const queryClient = useQueryClient()
   const [isLoading, setLoading] = useState(false);
   const [creds, setCreds] = useState({
     email: "",
@@ -60,6 +62,9 @@ export default function Auth() {
       const { error } = await supabase.auth.signInWithPassword(creds);
       if (error) return Alert.alert("Login failed", error.message);
 
+      queryClient.invalidateQueries({
+        queryKey: ['auth-user']
+      })
       ToastAndroid.show("Login successful", ToastAndroid.SHORT);
     } catch (error) {
       Alert.alert("Login failed", "Something went wrong while logging you in.");
