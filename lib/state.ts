@@ -7,8 +7,9 @@ import {
 import { ObservablePersistAsyncStorage } from "@legendapp/state/persist-plugins/async-storage";
 import { persistPluginQuery } from "@legendapp/state/persist-plugins/query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { QueryClient } from "@tanstack/react-query";
+import { MutationFunction, QueryClient } from "@tanstack/react-query";
 import { fetchNotes } from "./services/fetchNotes";
+import { postNotes } from "./services/postNotes";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,13 @@ persistObservable(state$, {
     query: {
       queryKey: () => ["all-notes"],
       queryFn: fetchNotes,
+    },
+    mutation: {
+      mutationFn: postNotes as MutationFunction<unknown>, // create one single note by taking title and body
+      onSuccess: console.log,
+      onError(error) {
+        console.log(error);
+      },
     },
   }),
 });

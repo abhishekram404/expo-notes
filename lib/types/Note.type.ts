@@ -10,6 +10,7 @@ export type Note = {
   bodyText?: string;
   date?: string;
   isPinned?: boolean;
+  is_synced?: boolean;
 
   updated_at?: string;
   inserted_at?: string;
