@@ -12,7 +12,10 @@ import { router } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-const fetchNotes = async () => supabase.from("notes").select();
+const fetchNotes = async () =>
+  supabase.from("notes").select().order("updated_at", {
+    ascending: false,
+  });
 
 export default function index() {
   const { data: notes = [] } = useQuery({
