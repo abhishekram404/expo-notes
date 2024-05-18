@@ -1,6 +1,5 @@
 import "react-native-gesture-handler";
 
-import Auth from "@/components/Auth";
 import { Colors } from "@/constants/Colors";
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
@@ -30,31 +29,24 @@ export default function StackLayout() {
       {Platform.OS === "android" ? (
         <StatusBar translucent style="auto" />
       ) : null}
-
-      {session ? (
-        <>
-          <Stack
-            initialRouteName="index"
-            screenOptions={{
-              title: "Expo Notes",
-              headerTintColor: Colors.dark.heading,
-              headerStyle: {
-                backgroundColor: Colors.dark.background,
-              },
-            }}
-          >
-            <Stack.Screen
-              name="create"
-              options={{
-                title: "Create Note ",
-                headerBackButtonMenuEnabled: true,
-              }}
-            />
-          </Stack>
-        </>
-      ) : (
-        <Auth />
-      )}
+      <Stack
+        initialRouteName="index"
+        screenOptions={{
+          title: "Expo Notes",
+          headerTintColor: Colors.dark.heading,
+          headerStyle: {
+            backgroundColor: Colors.dark.background,
+          },
+        }}
+      >
+        <Stack.Screen
+          name="create"
+          options={{
+            title: "Create Note ",
+            headerBackButtonMenuEnabled: true,
+          }}
+        />
+      </Stack>
     </View>
   );
 }

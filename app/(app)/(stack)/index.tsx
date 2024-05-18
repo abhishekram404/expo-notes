@@ -13,6 +13,10 @@ import { router, Stack, useNavigation } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
+/**
+ * FIXME: this is currently fetching all notes from all users.
+ * This isn't secure.
+ */
 const fetchNotes = async () =>
   supabase.from("notes").select().order("updated_at", {
     ascending: false,
