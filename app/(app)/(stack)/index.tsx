@@ -4,7 +4,6 @@ import PillsGroup from "@/components/PillsGroup";
 import Spacer from "@/components/Spacer";
 import { Colors } from "@/constants/Colors";
 import { state$ } from "@/lib/state";
-import { supabase } from "@/lib/supabase";
 import { determineCardsGroup } from "@/utils/determineCardsGroup";
 import { renderCard } from "@/utils/renderCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -18,10 +17,6 @@ import { Pressable, ScrollView, StyleSheet, View } from "react-native";
  * FIXME: this is currently fetching all notes from all users.
  * This isn't secure.
  */
-const fetchNotes = async () =>
-  supabase.from("notes").select().order("updated_at", {
-    ascending: false,
-  });
 
 export default observer(function index() {
   const navigation = useNavigation<DrawerNavigationProp<{}>>();
@@ -34,7 +29,7 @@ export default observer(function index() {
   // });
 
   const notes = state$.notes.get();
-  const { left, right } = determineCardsGroup(notes);
+  const cards = determineCardsGroup(notes);
 
   return (
     <>
@@ -67,10 +62,10 @@ export default observer(function index() {
         <ScrollView>
           <View style={styles.cardsSectionsContainer}>
             <View style={[styles.card, styles.cardsLeft]}>
-              {left.map(renderCard)}
+              {cards?.left?.map(renderCard)}
             </View>
             <View style={[styles.card, styles.cardsRight]}>
-              {right.map(renderCard)}
+              {cards?.right?.map(renderCard)}
             </View>
           </View>
         </ScrollView>
