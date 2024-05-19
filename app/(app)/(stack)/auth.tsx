@@ -1,18 +1,21 @@
+import Spacer from "@/components/Spacer";
 import { Colors } from "@/constants/Colors";
+import useSession from "@/hooks/useSession";
 import { supabase } from "@/lib/supabase";
-import { useQueryClient } from "@tanstack/react-query";
+import { showOnAndroid } from "@/utils/showOnAndroid";
+import { validateCreds } from "@/utils/validateCreds";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  Alert,
-  AppState,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  ToastAndroid,
-  View,
+    Alert,
+    AppState,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    ToastAndroid,
+    View,
 } from "react-native";
-import Spacer from "./Spacer";
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
@@ -22,31 +25,18 @@ AppState.addEventListener("change", (state) => {
   }
 });
 
-const validateCreds = (creds: Credentials) => {
-  if (!creds?.email?.trim()) {
-    Alert.alert("Invalid credentials", "An email is required.");
-    return false;
-  }
-
-  if (!creds?.password?.trim()) {
-    Alert.alert("Invalid credentials", "A password is required.");
-    return false;
-  }
-
-  return true;
-};
-
 export type Credentials = {
   email: string;
   password: string;
 };
 
 export default function Auth() {
-  const queryClient = useQueryClient()
+  const router = useRouter();
+  const session = useSession();
   const [isLoading, setLoading] = useState(false);
   const [creds, setCreds] = useState({
-    email: "",
-    password: "",
+    email: "test@keshavram.com.np",
+    password: "Hello@123",
   });
 
   const handleChange = (name: "email" | "password") => (text: string) => {
@@ -62,10 +52,10 @@ export default function Auth() {
       const { error } = await supabase.auth.signInWithPassword(creds);
       if (error) return Alert.alert("Login failed", error.message);
 
-      queryClient.invalidateQueries({
-        queryKey: ['auth-user']
-      })
-      ToastAndroid.show("Login successful", ToastAndroid.SHORT);
+      router.dismissAll();
+      showOnAndroid(() =>
+        ToastAndroid.show("Login successful", ToastAndroid.SHORT)
+      );
     } catch (error) {
       Alert.alert("Login failed", "Something went wrong while logging you in.");
     } finally {

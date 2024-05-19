@@ -5,6 +5,7 @@ import { state$ } from "@/lib/state";
 import { Note } from "@/lib/types/Note.type";
 import { PostNotePayload } from "@/lib/types/PostNotePayload.type";
 import { generateRandomString } from "@/utils/generateRandomString";
+import { showOnAndroid } from "@/utils/showOnAndroid";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import { Stack, useRouter } from "expo-router";
@@ -49,13 +50,15 @@ const Create = () => {
       local_id: generateRandomString(),
     };
     state$.notes.set((prev) => [note, ...prev]);
-    ToastAndroid.show("Note saved", ToastAndroid.SHORT);
+    showOnAndroid(() => ToastAndroid.show("Note saved", ToastAndroid.SHORT));
     router.dismiss();
   };
 
   const saveNote = async () => {
     if (!newPost.title.trim() && !newPost.bodyText.trim()) {
-      ToastAndroid.show("Note is empty", ToastAndroid.SHORT);
+      showOnAndroid(() =>
+        ToastAndroid.show("Note is empty", ToastAndroid.SHORT)
+      );
       return;
     }
     addNote(newPost);

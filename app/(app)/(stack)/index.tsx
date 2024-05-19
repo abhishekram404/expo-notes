@@ -20,13 +20,6 @@ import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 export default observer(function index() {
   const navigation = useNavigation<DrawerNavigationProp<{}>>();
-  // const { data: notes = [] } = useQuery({
-  //   queryKey: ["all-notes"],
-  //   queryFn: fetchNotes,
-  //   select(data: any) {
-  //     return data?.data;
-  //   },
-  // });
 
   const notes = state$.notes.get();
   const cards = determineCardsGroup(notes);

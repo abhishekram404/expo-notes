@@ -1,28 +1,18 @@
 import "react-native-gesture-handler";
 
 import { Colors } from "@/constants/Colors";
-import { supabase } from "@/lib/supabase";
-import { Session } from "@supabase/supabase-js";
+import useSession from "@/hooks/useSession";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 export const unstable_settings = {
   initialRouteName: "index",
 };
 
 export default function StackLayout() {
-  const [session, setSession] = useState<Session | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+  const session = useSession();
+  const isAuthenticated = session?.user;
 
   return (
     <View style={styles.container}>
@@ -39,6 +29,17 @@ export default function StackLayout() {
           },
         }}
       >
+        {!isAuthenticated ? (
+          <Stack.Screen
+            name="auth"
+            options={{
+              title: "Authentication",
+              headerBackButtonMenuEnabled: true,
+            }}
+          />
+        ) : (
+          <Stack.Screen name="index" />
+        )}
         <Stack.Screen
           name="create"
           options={{
