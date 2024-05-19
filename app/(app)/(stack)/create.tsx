@@ -50,7 +50,6 @@ const Create = () => {
       local_id: generateRandomString(),
     };
     state$.notes.set((prev) => [note, ...prev]);
-    showOnAndroid(() => ToastAndroid.show("Note saved", ToastAndroid.SHORT));
     router.dismiss();
   };
 

@@ -13,11 +13,6 @@ import { router, Stack, useNavigation } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
-/**
- * FIXME: this is currently fetching all notes from all users.
- * This isn't secure.
- */
-
 export default observer(function index() {
   const navigation = useNavigation<DrawerNavigationProp<{}>>();
 
